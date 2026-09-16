@@ -1,0 +1,23 @@
+vi:
+  permission_manage_issue_checklists: Quản lý checklist trên issue
+  label_issue_checklists: Checklist
+  label_issue_checklist_placeholder: Mục mới
+  label_issue_checklist_progress: "%{done} / %{total} hoàn thành"
+  label_issue_checklist_empty: Chưa có mục checklist.
+  notice_issue_checklist_created: Đã thêm mục checklist.
+  notice_issue_checklist_deleted: Đã xóa mục checklist.
+  button_issue_checklist_add: Thêm
+  button_issue_checklist_delete: Xóa
+  activerecord:
+    models:
+      issue_checklist: Mục checklist
+    attributes:
+      issue_checklist:
+        subject: Nội dung
+        is_done: Xong
+    errors:
+      models:
+        issue_checklist:
+          attributes:
+            base:
+              too_many_items: Mỗi issue tối đa 50 mục checklist.
