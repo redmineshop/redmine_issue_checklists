@@ -1,0 +1,62 @@
+<% if @issue %>
+  <% items = @issue.issue_checklists.sorted.to_a %>
+  <% done, total = IssueChecklist.progress_for(@issue) %>
+  <% can_manage = User.current.allowed_to?(:manage_issue_checklists, @issue.project) %>
+  <div id="issue-checklists" class="issue-checklists box">
+    <h3>
+      <%= l(:label_issue_checklists) %>
+      <% if total.positive? %>
+        <span class="issue-checklists-progress">
+          <%= l(:label_issue_checklist_progress, done: done, total: total) %>
+        </span>
+      <% end %>
+    </h3>
+    <% if total.positive? %>
+      <progress class="issue-checklists-meter" value="<%= done %>" max="<%= total %>"
+                aria-label="<%= l(:label_issue_checklist_progress, done: done, total: total) %>"></progress>
+    <% end %>
+    <% if items.any? %>
+      <ul class="issue-checklists-list">
+        <% items.each do |item| %>
+          <li class="issue-checklists-item<%= ' is-done' if item.is_done? %>">
+            <% if can_manage %>
+              <%= form_tag toggle_issue_checklist_path(item), method: :post, class: 'issue-checklists-toggle-form' do %>
+                <label>
+                  <%= check_box_tag 'done', '1', item.is_done?,
+                                    class: 'issue-checklist-toggle',
+                                    id: "issue-checklist-#{item.id}" %>
+                  <span><%= item.subject %></span>
+                </label>
+                <noscript><%= submit_tag l(:button_save) %></noscript>
+              <% end %>
+              <%= button_to l(:button_issue_checklist_delete),
+                            issue_checklist_path(item),
+                            method: :delete,
+                            class: 'issue-checklists-delete',
+                            data: { confirm: l(:text_are_you_sure) } %>
+            <% else %>
+              <label>
+                <%= check_box_tag "issue-checklist-ro-#{item.id}", '1', item.is_done?, disabled: true %>
+                <span><%= item.subject %></span>
+              </label>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="nodata"><%= l(:label_issue_checklist_empty) %></p>
+    <% end %>
+    <% if can_manage %>
+      <%= form_tag issue_checklists_path(issue_id: @issue.id), method: :post, class: 'issue-checklists-add-form' do %>
+        <label class="sr-only" for="issue-checklist-subject"><%= l(:label_issue_checklist_placeholder) %></label>
+        <%= text_field_tag 'issue_checklist[subject]',
+                           '',
+                           id: 'issue-checklist-subject',
+                           maxlength: 255,
+                           required: true,
+                           placeholder: l(:label_issue_checklist_placeholder) %>
+        <%= submit_tag l(:button_issue_checklist_add) %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
