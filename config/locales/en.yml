@@ -1,0 +1,23 @@
+en:
+  permission_manage_issue_checklists: Manage issue checklists
+  label_issue_checklists: Checklist
+  label_issue_checklist_placeholder: New item
+  label_issue_checklist_progress: "%{done} of %{total} done"
+  label_issue_checklist_empty: No checklist items yet.
+  notice_issue_checklist_created: Checklist item added.
+  notice_issue_checklist_deleted: Checklist item deleted.
+  button_issue_checklist_add: Add
+  button_issue_checklist_delete: Delete
+  activerecord:
+    models:
+      issue_checklist: Checklist item
+    attributes:
+      issue_checklist:
+        subject: Item
+        is_done: Done
+    errors:
+      models:
+        issue_checklist:
+          attributes:
+            base:
+              too_many_items: An issue can have at most 50 checklist items.
