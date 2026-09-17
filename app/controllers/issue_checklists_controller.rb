@@ -30,18 +30,25 @@ class IssueChecklistsController < ApplicationController
   private
 
   def find_issue
-    @issue = Issue.find(params[:issue_id])
-    @project = @issue.project
+    # Same visibility rule as Redmine ApplicationController#find_issue.
+    assign_visible_issue!(Issue.find(params[:issue_id]))
   rescue ActiveRecord::RecordNotFound
     render_404
   end
 
   def find_checklist
     @checklist = IssueChecklist.find(params[:id])
-    @issue = @checklist.issue
-    @project = @issue.project
+    assign_visible_issue!(@checklist.issue)
   rescue ActiveRecord::RecordNotFound
     render_404
+  end
+
+  def assign_visible_issue!(issue)
+    raise ActiveRecord::RecordNotFound if issue.nil?
+    raise Unauthorized unless issue.visible?
+
+    @issue = issue
+    @project = issue.project
   end
 
   def checklist_params
