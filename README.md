@@ -1,14 +1,10 @@
 # Redmine Issue Checklists
 
-**Last maintained: 2026-09-17**
-
-**Community edition — free forever, MIT.** No license key, no phone-home, no account required to install.
-
-Source of truth: [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists).
+**Free, open source (MIT).** Source: [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists). Product page: [redmineshop.com/products/redmine-issue-checklists](https://redmineshop.com/products/redmine-issue-checklists).
 
 Interactive checklists on Redmine issues — add items, mark them done, and see progress on the issue page. Built for self-hosted teams that want a Definition of Done without turning every step into a subtask.
 
-Optional product overview (not required to install): [redmineshop.com/products/redmine-issue-checklists](https://redmineshop.com/products/redmine-issue-checklists).
+Community edition: **free forever**, no license key, no phone-home, no email to clone.
 
 ## Features
 
@@ -17,27 +13,22 @@ Optional product overview (not required to install): [redmineshop.com/products/r
 - Progress: `N of M done` plus a meter
 - Permission: `manage_issue_checklists` (issue tracking)
 - Anyone who can view the issue can see the list; only the permission can change it
-- Mutations also require the issue to be visible to the current user (`Issue#visible?`)
 - Maximum 50 items per issue
 - English + Vietnamese UI strings
 
 ## Compatibility
 
-`init.rb` declares `requires_redmine version_or_higher: '5.0'`. That is the **declared** floor, not a tested matrix.
+| Redmine | Ruby | Database | Status |
+|---------|------|----------|--------|
+| 6.x     | 3.2+ | MySQL 8 / PostgreSQL | Targeted — **untested** (no published QA matrix) |
+| 5.1.x   | 3.1+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
+| 5.0.x   | 3.0+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
 
-This maintenance pass ran **GitHub Actions syntax CI only** (Ruby 3.2 `ruby -c` on every `.rb`, plus ERB compile). There is **no live Redmine** in this repository’s Actions workflow, so runtime compatibility with a specific Redmine/Ruby/database combination was **not** verified here.
-
-| Redmine | Typical Ruby | Database | What this pass verified |
-|---------|--------------|----------|-------------------------|
-| 6.x | 3.2+ | MySQL 8 / PostgreSQL | Declared target. Syntax CI (Ruby 3.2) only. |
-| 5.1.x | 3.1+ | MySQL 8 / PostgreSQL | Declared target. Not booted against Redmine in this pass. |
-| 5.0.x | 3.0+ | MySQL 8 / PostgreSQL | Minimum declared (`requires_redmine`). Not booted against Redmine in this pass. |
-
-Plugin tests under `test/` are standard Redmine plugin tests; they need a Redmine application tree (see Tests). Do not read the table above as a published QA matrix.
+The plugin declares `requires_redmine version_or_higher: '5.0'`. Do not treat catalog versions as tested cells.
 
 ## Installation
 
-**Estimated time: 5–10 minutes.** Clone from GitHub — that is the install path.
+**Estimated time: 5–10 minutes.**
 
 ### 1. Clone from GitHub
 
@@ -75,6 +66,14 @@ No extra gems.
 
 Open any issue. The checklist box is below the description.
 
+## Screenshot
+
+Checklist box on the issue page (demo Redmine, plugin quality harness):
+
+![Checklist on a Redmine issue](screenshots/issue-page-checklist.png)
+
+Refresh from the RedmineShop monorepo: `./demo/scripts/run-plugin-e2e.sh`.
+
 ## Uninstall
 
 ```bash
@@ -86,18 +85,34 @@ Remove `plugins/redmine_issue_checklists` and restart Redmine. Rolling back the 
 
 ## Tests
 
-On a Redmine checkout that already has this plugin in `plugins/`:
+Unit + functional (beyond `ruby -c`):
 
 ```bash
 bundle exec rake redmine:plugins:test NAME=redmine_issue_checklists RAILS_ENV=test
 ```
 
-This GitHub repository’s CI does **not** run that rake task (no Redmine app in the workflow). CI is Ruby 3.2 syntax + ERB compile.
+On the RedmineShop demo stack:
+
+```bash
+PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
+```
+
+### Quality harness (demo + E2E)
+
+| Bar | Status |
+| --- | --- |
+| Automated tests beyond `ruby -c` | **Verified** — `test/unit` + `test/functional` in this repo |
+| Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on `docker-compose.demo.yml`; `demo/scripts/prepare-demo-harness.sh` migrates + seeds `plugin-qa` |
+| E2E primary happy path | **Verified** — Playwright `demo/e2e/tests/redmine_issue_checklists.spec.js` (add item, toggle done) on the demo stack |
+| UI screenshot in README | **Verified** — `screenshots/issue-page-checklist.png` from that spec |
+| Redmine 5.1 / 6.x matrix | **Declared / untested** — this harness is one demo image, not a QA matrix |
+
+How to run: [docs/plugin-quality-harness.md](../../../../docs/plugin-quality-harness.md).
 
 ## Community support
 
-Async only, via [GitHub issues](https://github.com/redmineshop/redmine_issue_checklists/issues). No 24/7 SLA.
+Async only: [GitHub issues](https://github.com/redmineshop/redmine_issue_checklists/issues) or the [support form](https://redmineshop.com/support). No 24/7 SLA.
 
 ## License
 
-MIT — see `LICENSE`. Community / free edition; no paid SKU in this repository.
+MIT — see `LICENSE`.
