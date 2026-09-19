@@ -6,7 +6,7 @@ All notable changes to this plugin.
 
 ### Changed
 
-- README: **Last maintained** 2026-09-18, Community/CI badges, and public-safe harness wording (no clickable private-monorepo URLs)
+- README: Last maintained date, Community/CI badges, and screenshots. E2E is not in this public repo.
 
 ## [1.0.0] — 2026-09-16
 
