@@ -6,7 +6,7 @@ All notable changes to this plugin.
 
 ### Changed
 
-- README: **Last maintained** 2026-09-18 and public-safe quality-harness wording (no relative monorepo doc link)
+- README: **Last maintained** 2026-09-18, Community/CI badges, and public-safe harness wording (no clickable private-monorepo URLs)
 
 ## [1.0.0] — 2026-09-16
 

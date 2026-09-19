@@ -1,12 +1,16 @@
 # Redmine Issue Checklists
 
+[![Community · Free forever](https://img.shields.io/badge/Community-Free%20forever-brightgreen)](https://redmineshop.com/products/redmine-issue-checklists)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![CI](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml/badge.svg)](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml)
+
 **Last maintained:** 2026-09-18
 
-**Free, open source (MIT).** Source: [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists). Product page: [redmineshop.com/products/redmine-issue-checklists](https://redmineshop.com/products/redmine-issue-checklists).
+**Source on GitHub:** [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists)
 
 Interactive checklists on Redmine issues — add items, mark them done, and see progress on the issue page. Built for self-hosted teams that want a Definition of Done without turning every step into a subtask.
 
-Community edition: **free forever**, no license key, no phone-home, no email to clone.
+Community edition is **free forever** — no license key, no phone-home, **no email to clone**.
 
 ## Features
 
@@ -74,7 +78,7 @@ Checklist box on the issue page (demo Redmine, plugin quality harness):
 
 ![Checklist on a Redmine issue](screenshots/issue-page-checklist.png)
 
-Screenshot refresh is a private-monorepo Playwright job (`demo/scripts/run-plugin-e2e.sh`), not something a public clone can run.
+Screenshot refresh lives in the private `redmineshop/redmineshop` harness. A public clone cannot run it.
 
 ## Uninstall
 
@@ -93,7 +97,7 @@ Unit + functional (beyond `ruby -c`):
 bundle exec rake redmine:plugins:test NAME=redmine_issue_checklists RAILS_ENV=test
 ```
 
-On the private RedmineShop demo stack (monorepo only):
+On the private `redmineshop/redmineshop` demo stack (not this public clone):
 
 ```bash
 PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
@@ -101,15 +105,15 @@ PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
 
 ### Quality harness (demo + E2E)
 
-The Playwright E2E harness lives in the **private** RedmineShop monorepo (`docker-compose.demo.yml` + `demo/scripts/run-plugin-e2e.sh`). This public GitHub repo is the plugin only — it does not ship that compose file, and a public clone cannot open monorepo docs such as `docs/plugin-quality-harness.md`. There is no public-safe copy of that harness guide.
+E2E lives in the **private** `redmineshop/redmineshop` harness (`docker-compose.demo.yml` + Playwright). This public GitHub repo is the plugin only — it does not ship that compose file, and a public clone cannot open private harness docs.
 
 Install and smoke this plugin on your own Redmine: [issue checklists product page](https://redmineshop.com/products/redmine-issue-checklists).
 
 | Bar | Status |
 | --- | --- |
 | Automated tests beyond `ruby -c` | **Verified** — `test/unit` + `test/functional` in this repo |
-| Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the monorepo demo stack; seed enables the module on `plugin-qa` |
-| E2E primary happy path | **Verified** — Playwright `demo/e2e/tests/redmine_issue_checklists.spec.js` (add item, toggle done) on the demo stack |
+| Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the private monorepo demo stack; seed enables the module on `plugin-qa` |
+| E2E primary happy path | **Verified** — Playwright on that private harness (add item, toggle done) |
 | UI screenshot in README | **Verified** — `screenshots/issue-page-checklist.png` from that spec |
 | Redmine 5.1 / 6.x matrix | **Declared / untested** — this harness is one demo image, not a QA matrix |
 

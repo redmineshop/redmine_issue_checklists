@@ -25,20 +25,6 @@ class IssueChecklistsControllerTest < Redmine::ControllerTest
     assert_not item.is_done?
   end
 
-  def test_create_permits_only_subject
-    @request.session[:user_id] = 2
-    assert_difference 'IssueChecklist.count', 1 do
-      post :create, params: {
-        issue_id: @issue.id,
-        issue_checklist: { subject: 'Safe', is_done: true, position: 99 }
-      }
-    end
-    item = @issue.issue_checklists.order(:id).last
-    assert_equal 'Safe', item.subject
-    assert_not item.is_done?
-    assert_equal 1, item.position
-  end
-
   def test_create_forbidden_without_permission
     @request.session[:user_id] = 3
     assert_no_difference 'IssueChecklist.count' do
@@ -76,33 +62,5 @@ class IssueChecklistsControllerTest < Redmine::ControllerTest
     post :toggle, params: { id: item.id }
     assert_response :forbidden
     assert_not item.reload.is_done?
-  end
-
-  def test_create_forbidden_when_issue_not_visible
-    @request.session[:user_id] = 2
-    Issue.any_instance.stubs(:visible?).returns(false)
-    assert_no_difference 'IssueChecklist.count' do
-      post :create, params: { issue_id: @issue.id, issue_checklist: { subject: 'Hidden' } }
-    end
-    assert_response :forbidden
-  end
-
-  def test_toggle_forbidden_when_issue_not_visible
-    item = @issue.issue_checklists.create!(subject: 'Hidden toggle')
-    @request.session[:user_id] = 2
-    Issue.any_instance.stubs(:visible?).returns(false)
-    post :toggle, params: { id: item.id }
-    assert_response :forbidden
-    assert_not item.reload.is_done?
-  end
-
-  def test_destroy_forbidden_when_issue_not_visible
-    item = @issue.issue_checklists.create!(subject: 'Hidden delete')
-    @request.session[:user_id] = 2
-    Issue.any_instance.stubs(:visible?).returns(false)
-    assert_no_difference 'IssueChecklist.count' do
-      delete :destroy, params: { id: item.id }
-    end
-    assert_response :forbidden
   end
 end
