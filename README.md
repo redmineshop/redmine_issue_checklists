@@ -74,9 +74,13 @@ Open any issue. The checklist box is below the description.
 
 ## Screenshot
 
-Checklist box on the issue page (demo Redmine, plugin quality harness):
+Issue page on demo Redmine. The checklist sits under the description: four items, two done, with the progress line.
 
-![Checklist on a Redmine issue](screenshots/issue-page-checklist.png)
+![Issue header and checklist](screenshots/issue-checklist.png)
+
+Adding another item (text in the field, not yet saved):
+
+![Adding a checklist item](screenshots/checklist-edit.png)
 
 Screenshot refresh lives in the private `redmineshop/redmineshop` harness. A public clone cannot run it.
 
@@ -114,7 +118,7 @@ Install and smoke this plugin on your own Redmine: [issue checklists product pag
 | Automated tests beyond `ruby -c` | **Verified** — `test/unit` + `test/functional` in this repo |
 | Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the private monorepo demo stack; seed enables the module on `plugin-qa` |
 | E2E primary happy path | **Verified** — Playwright on that private harness (add item, toggle done) |
-| UI screenshot in README | **Verified** — `screenshots/issue-page-checklist.png` from that spec |
+| UI screenshot in README | **Verified** — `screenshots/{issue-checklist,checklist-edit}.png` from that spec (full issue page). `issue-page-checklist.png` is the same image as `issue-checklist.png`. There is no per-tracker checklist screen. |
 | Redmine 5.1 / 6.x matrix | **Declared / untested** — this harness is one demo image, not a QA matrix |
 
 ## Community support
