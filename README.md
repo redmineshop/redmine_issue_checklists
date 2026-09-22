@@ -4,13 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![CI](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml/badge.svg)](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml)
 
-**Last maintained:** 2026-09-18
+**Last maintained:** 2026-09-22
 
 **Source on GitHub:** [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists)
 
-Interactive checklists on Redmine issues — add items, mark them done, and see progress on the issue page. Built for self-hosted teams that want a Definition of Done without turning every step into a subtask.
+Interactive checklists on Redmine issues.
 
-Community edition is **free forever** — no license key, no phone-home, **no email to clone**.
+Add items, mark them done, and see progress on the issue page. Built for self-hosted teams that want a Definition of Done without turning every step into a subtask.
+
+Community edition is free — no license key and no phone-home. Clone from this repository.
 
 ## Features
 
@@ -24,13 +26,15 @@ Community edition is **free forever** — no license key, no phone-home, **no em
 
 ## Compatibility
 
-| Redmine | Ruby | Database | Status |
-|---------|------|----------|--------|
-| 6.x     | 3.2+ | MySQL 8 / PostgreSQL | Targeted — **untested** (no published QA matrix) |
-| 5.1.x   | 3.1+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
-| 5.0.x   | 3.0+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
+Declared follows `requires_redmine version_or_higher: '5.0'` for 5.x and 6.x. Redmine 7.0 is not a claimed target. Tested means a run pinned to that Redmine line. The demo image is official `redmine:latest` (tag not pinned), so a demo boot is not a pass for a specific row.
 
-The plugin declares `requires_redmine version_or_higher: '5.0'`. Do not treat catalog versions as tested cells.
+| Redmine | Declared | Tested |
+|---------|----------|--------|
+| 5.0.x   | Yes      | No — unverified |
+| 5.1.x   | Yes      | No — unverified |
+| 6.0.x   | Yes      | No — unverified |
+| 6.1.x   | Yes      | No — unverified |
+| 7.0.x   | No       | No — unverified |
 
 ## Installation
 
@@ -70,15 +74,15 @@ No extra gems.
 
 **Administration → Roles and permissions** — enable **Manage issue checklists** on roles that should add/toggle/delete items.
 
-Open any issue. The checklist box is below the description.
+Open **Administration → Plugins** and confirm **Redmine Issue Checklists** is listed. Then open any issue. The checklist box is below the description.
 
 ## Screenshot
 
-Checklist box on the issue page (demo Redmine, plugin quality harness):
+Checklist box on the issue page (demo Redmine):
 
 ![Checklist on a Redmine issue](screenshots/issue-page-checklist.png)
 
-Screenshot refresh lives in the private `redmineshop/redmineshop` harness. A public clone cannot run it.
+The image is a crop of the checklist box from a demo Redmine. The Redmine version in the capture was not recorded. A full issue-page screenshot is still TODO.
 
 ## Uninstall
 
@@ -97,25 +101,15 @@ Unit + functional (beyond `ruby -c`):
 bundle exec rake redmine:plugins:test NAME=redmine_issue_checklists RAILS_ENV=test
 ```
 
-On the private `redmineshop/redmineshop` demo stack (not this public clone):
+Public GitHub Actions (`.github/workflows/ci.yml`) runs Ruby syntax checks only (`ruby -c`).
 
-```bash
-PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
-```
+## Limits
 
-### Quality harness (demo + E2E)
-
-E2E lives in the **private** `redmineshop/redmineshop` harness (`docker-compose.demo.yml` + Playwright). This public GitHub repo is the plugin only — it does not ship that compose file, and a public clone cannot open private harness docs.
-
-Install and smoke this plugin on your own Redmine: [issue checklists product page](https://redmineshop.com/products/redmine-issue-checklists).
-
-| Bar | Status |
-| --- | --- |
-| Automated tests beyond `ruby -c` | **Verified** — `test/unit` + `test/functional` in this repo |
-| Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the private monorepo demo stack; seed enables the module on `plugin-qa` |
-| E2E primary happy path | **Verified** — Playwright on that private harness (add item, toggle done) |
-| UI screenshot in README | **Verified** — `screenshots/issue-page-checklist.png` from that spec |
-| Redmine 5.1 / 6.x matrix | **Declared / untested** — this harness is one demo image, not a QA matrix |
+- At most 50 items per issue. Checklist rows are not subtasks and do not block issue status by themselves.
+- Anyone who can view the issue can see the list. Only **Manage issue checklists** can add, toggle, or delete items.
+- Uninstall with `VERSION=0` deletes every checklist row.
+- MiniTest does not boot Redmine 5.0, 5.1, 6.0, 6.1, or 7.0.
+- Product page: https://redmineshop.com/products/redmine-issue-checklists
 
 ## Community support
 
