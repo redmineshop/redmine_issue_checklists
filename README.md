@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![CI](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml/badge.svg)](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml)
 
-**Last maintained:** 2026-09-18
+**Last maintained:** 2026-09-25
 
 **Source on GitHub:** [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists)
 
@@ -107,6 +107,8 @@ On the private `redmineshop/redmineshop` demo stack (not this public clone):
 PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
 ```
 
+Public CI (`.github/workflows/ci.yml`) is still Ruby syntax only (`ruby -c`). A green badge does not run the MiniTest suite and is not a Redmine compatibility result.
+
 ### Quality harness (demo + E2E)
 
 E2E lives in the **private** `redmineshop/redmineshop` harness (`docker-compose.demo.yml` + Playwright). This public GitHub repo is the plugin only — it does not ship that compose file, and a public clone cannot open private harness docs.
@@ -119,7 +121,7 @@ Install and smoke this plugin on your own Redmine: [issue checklists product pag
 | Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the private monorepo demo stack; seed enables the module on `plugin-qa` |
 | E2E primary happy path | **Verified** — Playwright on that private harness (add item, toggle done) |
 | UI screenshot in README | **Verified** — `screenshots/{issue-checklist,checklist-edit}.png` from that spec (full issue page). `issue-page-checklist.png` is the same image as `issue-checklist.png`. There is no per-tracker checklist screen. |
-| Redmine 5.1 / 6.x matrix | **Declared / untested** — this harness is one demo image, not a QA matrix |
+| Redmine 5.1 / 6.x matrix | **Declared / untested** — MiniTest and the Playwright happy path for this pass ran on one demo image (Redmine 7.0.1, Ruby 4.0.7, MySQL 8). That is not a 5.x or 6.x cell, and PostgreSQL was not run |
 
 ## Community support
 

@@ -6,7 +6,8 @@ All notable changes to this plugin.
 
 ### Changed
 
-- README: Last maintained date, Community/CI badges, and screenshots. E2E is not in this public repo.
+- README: Last maintained 2026-09-25. Public CI remains `ruby -c` only. Redmine 5.x/6.x rows stay untested. MiniTest (14 runs) and the existing Playwright happy path ran on one demo image (Redmine 7.0.1, MySQL 8). Screenshots were not replaced.
+- README: Community/CI badges and screenshots. E2E is not in this public repo.
 
 ## [1.0.0] — 2026-09-16
 
