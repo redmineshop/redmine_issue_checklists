@@ -17,7 +17,7 @@
     <% end %>
     <% if items.any? %>
       <ul class="issue-checklists-list">
-        <% items.each do |item| %>
+        <% items.each_with_index do |item, index| %>
           <li class="issue-checklists-item<%= ' is-done' if item.is_done? %>">
             <% if can_manage %>
               <%= form_tag toggle_issue_checklist_path(item), method: :post, class: 'issue-checklists-toggle-form' do %>
@@ -28,6 +28,22 @@
                   <span><%= item.subject %></span>
                 </label>
                 <noscript><%= submit_tag l(:button_save) %></noscript>
+              <% end %>
+              <% if index.positive? %>
+                <%= button_to l(:button_issue_checklist_up),
+                              reorder_issue_checklist_path(item),
+                              method: :post,
+                              params: { direction: 'up' },
+                              class: 'issue-checklists-move',
+                              form_class: 'issue-checklists-move-form' %>
+              <% end %>
+              <% if index < items.length - 1 %>
+                <%= button_to l(:button_issue_checklist_down),
+                              reorder_issue_checklist_path(item),
+                              method: :post,
+                              params: { direction: 'down' },
+                              class: 'issue-checklists-move',
+                              form_class: 'issue-checklists-move-form' %>
               <% end %>
               <%= button_to l(:button_issue_checklist_delete),
                             issue_checklist_path(item),

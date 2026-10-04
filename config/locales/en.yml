@@ -8,6 +8,9 @@ en:
   notice_issue_checklist_deleted: Checklist item deleted.
   button_issue_checklist_add: Add
   button_issue_checklist_delete: Delete
+  button_issue_checklist_up: Move up
+  button_issue_checklist_down: Move down
+  error_issue_checklist_reorder: Checklist item could not be moved.
   activerecord:
     models:
       issue_checklist: Checklist item

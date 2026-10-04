@@ -8,6 +8,9 @@ vi:
   notice_issue_checklist_deleted: Đã xóa mục checklist.
   button_issue_checklist_add: Thêm
   button_issue_checklist_delete: Xóa
+  button_issue_checklist_up: Chuyển lên
+  button_issue_checklist_down: Chuyển xuống
+  error_issue_checklist_reorder: Không thể đổi thứ tự mục checklist.
   activerecord:
     models:
       issue_checklist: Mục checklist
