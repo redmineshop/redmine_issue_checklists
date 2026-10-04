@@ -4,10 +4,20 @@ All notable changes to this plugin.
 
 ## Unreleased
 
+### Added
+
+- Move checklist items up or down
+- Copying an issue copies checklist items when the user can see the source issue and can manage checklists on the destination project
+- GitHub Actions runs the plugin MiniTest suite inside the official Redmine 7.0.1 image (SQLite)
+
+### Fixed
+
+- Create, toggle, reorder, and delete refuse an issue the current user cannot see
+- Validation errors stored in the flash are escaped. Redmine renders flash text as HTML
+
 ### Changed
 
-- README: Last maintained 2026-09-25. Public CI remains `ruby -c` only. Redmine 5.x/6.x rows stay untested. MiniTest (14 runs) and the existing Playwright happy path ran on one demo image (Redmine 7.0.1, MySQL 8). Screenshots were not replaced.
-- README: Community/CI badges and screenshots. E2E is not in this public repo.
+- README compatibility: Redmine 7.0.1 on SQLite is verified by CI. Redmine 5.x, 6.x, other 7.x releases, MySQL, and PostgreSQL are declared and were not run
 
 ## [1.0.0] — 2026-09-16
 

@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![CI](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml/badge.svg)](https://github.com/redmineshop/redmine_issue_checklists/actions/workflows/ci.yml)
 
-**Last maintained:** 2026-09-25
+**Last maintained:** 2026-10-04
 
 **Source on GitHub:** [github.com/redmineshop/redmine_issue_checklists](https://github.com/redmineshop/redmine_issue_checklists)
 
@@ -15,22 +15,27 @@ Community edition is **free forever** — no license key, no phone-home, **no em
 ## Features
 
 - Checklist box on **Issues → show** (below the description)
-- Add, toggle done, and delete items (HTML forms; checkbox toggle also works with a small script)
+- Add, toggle done, delete, and move items up or down (HTML forms; the checkbox also submits with a small script)
 - Progress: `N of M done` plus a meter
 - Permission: `manage_issue_checklists` (issue tracking)
-- Anyone who can view the issue can see the list; only the permission can change it
+- Anyone who can view the issue can see the list; only that permission can change it
+- Copying an issue copies its checklist items when you can see the source issue and you can manage checklists on the destination project. Done state and order are kept. At most 50 items
 - Maximum 50 items per issue
 - English + Vietnamese UI strings
+
+Checklist edits are not added to the issue history. There is no JSON API and no drag-and-drop reorder.
 
 ## Compatibility
 
 | Redmine | Ruby | Database | Status |
 |---------|------|----------|--------|
-| 6.x     | 3.2+ | MySQL 8 / PostgreSQL | Targeted — **untested** (no published QA matrix) |
-| 5.1.x   | 3.1+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
-| 5.0.x   | 3.0+ | MySQL 8 / PostgreSQL | Targeted — **untested** |
+| 7.0.1   | 4.0.7 | SQLite in CI | **Verified** — plugin migration and MiniTest via `test/run-redmine-7.0.1.sh` on the official `redmine:7.0.1` image (Rails 8.1.3.1). GitHub Actions runs that script |
+| Other 7.x | — | — | Declared by `requires_redmine version_or_higher: '5.0'`. Not run |
+| 6.x     | 3.2+ | MySQL 8 / PostgreSQL | Declared — **not run** |
+| 5.1.x   | 3.1+ | MySQL 8 / PostgreSQL | Declared — **not run** |
+| 5.0.x   | 3.0+ | MySQL 8 / PostgreSQL | Declared — **not run** |
 
-The plugin declares `requires_redmine version_or_higher: '5.0'`. Do not treat catalog versions as tested cells.
+MySQL 8 and PostgreSQL were not part of the CI run. The plugin declares `requires_redmine version_or_higher: '5.0'`. Only the 7.0.1 / SQLite cell is verified.
 
 ## Installation
 
@@ -68,7 +73,7 @@ No extra gems.
 
 ### 3. Grant permission
 
-**Administration → Roles and permissions** — enable **Manage issue checklists** on roles that should add/toggle/delete items.
+**Administration → Roles and permissions** — enable **Manage issue checklists** on roles that should add, toggle, reorder, or delete items.
 
 Open any issue. The checklist box is below the description.
 
@@ -82,7 +87,7 @@ Adding another item (text in the field, not yet saved):
 
 ![Adding a checklist item](screenshots/checklist-edit.png)
 
-Screenshot refresh lives in the private `redmineshop/redmineshop` harness. A public clone cannot run it.
+These screenshots were not retaken when move up / move down was added, so those buttons are not in the pictures.
 
 ## Uninstall
 
@@ -95,33 +100,32 @@ Remove `plugins/redmine_issue_checklists` and restart Redmine. Rolling back the 
 
 ## Tests
 
-Unit + functional (beyond `ruby -c`):
+From a Redmine application that has this plugin under `plugins/`:
 
 ```bash
-bundle exec rake redmine:plugins:test NAME=redmine_issue_checklists RAILS_ENV=test
+cd /path/to/redmine
+RAILS_ENV=test bundle exec rake redmine:plugins:migrate NAME=redmine_issue_checklists
+RAILS_ENV=test bundle exec rake redmine:plugins:test NAME=redmine_issue_checklists
 ```
 
-On the private `redmineshop/redmineshop` demo stack (not this public clone):
+The official `redmine:7.0.1` image omits the Gemfile `:test` group. `test/run-redmine-7.0.1.sh` installs that group and runs the suite on SQLite. GitHub Actions runs that script (`.github/workflows/ci.yml`). A `ruby -c` job also runs; it is not the compatibility result.
 
-```bash
-PLUGIN_NAME=redmine_issue_checklists ./demo/scripts/run-sso-plugin-tests.sh
+On 2026-10-04, `test/run-redmine-7.0.1.sh` passed on the official `redmine:7.0.1` image (SQLite, Ruby 4.0.7, Rails 8.1.3.1):
+
+```text
+67 runs, 283 assertions, 0 failures, 0 errors, 0 skips
 ```
 
-Public CI (`.github/workflows/ci.yml`) is still Ruby syntax only (`ruby -c`). A green badge does not run the MiniTest suite and is not a Redmine compatibility result.
-
-### Quality harness (demo + E2E)
-
-E2E lives in the **private** `redmineshop/redmineshop` harness (`docker-compose.demo.yml` + Playwright). This public GitHub repo is the plugin only — it does not ship that compose file, and a public clone cannot open private harness docs.
-
-Install and smoke this plugin on your own Redmine: [issue checklists product page](https://redmineshop.com/products/redmine-issue-checklists).
+The suite covers create, toggle, reorder, and delete; view versus manage; non-members; private issues and private projects; a disabled Issue tracking module; mass assignment of `is_done`, `position`, and `issue_id`; SQL metacharacters stored as text; HTML escaped on the issue page and in the flash; missing CSRF tokens; issue copy when the destination allows manage and when it does not; and copy from an issue the user cannot see. GET is not routed to the mutating actions. A JSON request does not create an item. Checklist edits are not written to the issue journal.
 
 | Bar | Status |
 | --- | --- |
-| Automated tests beyond `ruby -c` | **Verified** — `test/unit` + `test/functional` in this repo |
-| Installed + enabled on demo Redmine | **Verified** — mounted via `demo/plugins/` on the private monorepo demo stack; seed enables the module on `plugin-qa` |
-| E2E primary happy path | **Verified** — Playwright on that private harness (add item, toggle done) |
-| UI screenshot in README | **Verified** — `screenshots/{issue-checklist,checklist-edit}.png` from that spec (full issue page). `issue-page-checklist.png` is the same image as `issue-checklist.png`. There is no per-tracker checklist screen. |
-| Redmine 5.1 / 6.x matrix | **Declared / untested** — MiniTest and the Playwright happy path for this pass ran on one demo image (Redmine 7.0.1, Ruby 4.0.7, MySQL 8). That is not a 5.x or 6.x cell, and PostgreSQL was not run |
+| Plugin MiniTest on Redmine 7.0.1 | **Verified** — official image, SQLite, Ruby 4.0.7, Rails 8.1.3.1, 67 runs, 283 assertions, 0 failures |
+| Redmine 5.x, 6.x, and other 7.x | **Declared** — `requires_redmine version_or_higher: '5.0'`. Not run |
+| MySQL 8 / PostgreSQL | **Not run** |
+| README screenshots | **Present** — `screenshots/issue-checklist.png` and `screenshots/checklist-edit.png`. Not retaken for the move buttons. `issue-page-checklist.png` is the same image as `issue-checklist.png` |
+| Live demo install | **Not done** |
+| Browser end-to-end tests | **Not in this repository** |
 
 ## Community support
 

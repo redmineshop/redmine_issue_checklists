@@ -18,7 +18,7 @@ Redmine::Plugin.register :redmine_issue_checklists do
 
   project_module :issue_tracking do
     permission :manage_issue_checklists,
-               { issue_checklists: %i[create destroy toggle] }
+               { issue_checklists: %i[create destroy toggle reorder] }
   end
 end
 

@@ -2,6 +2,7 @@
 
 class IssueChecklist < ActiveRecord::Base
   MAX_ITEMS_PER_ISSUE = 50
+  DIRECTIONS = %w[up down].freeze
 
   belongs_to :issue
 
@@ -21,6 +22,30 @@ class IssueChecklist < ActiveRecord::Base
     total = items.size
     done = items.count(&:is_done?)
     [done, total]
+  end
+
+  # Swap this row with its neighbor in the same issue. direction must be
+  # "up" or "down". Returns false for anything else and does not write.
+  # A move past either end is a no-op and returns true.
+  def reorder!(direction)
+    direction = direction.to_s
+    return false unless DIRECTIONS.include?(direction)
+
+    self.class.transaction do
+      siblings = self.class.where(issue_id: issue_id).order(:position, :id).to_a
+      index = siblings.index { |row| row.id == id }
+      offset = direction == 'up' ? -1 : 1
+      neighbor_index = index.nil? ? nil : index + offset
+      in_range = !neighbor_index.nil? && neighbor_index >= 0 && neighbor_index < siblings.size
+      if in_range
+        siblings.each_with_index do |row, i|
+          row.update_columns(position: i + 1) if row.position != i + 1
+        end
+        siblings[index].update_columns(position: neighbor_index + 1)
+        siblings[neighbor_index].update_columns(position: index + 1)
+      end
+    end
+    true
   end
 
   private

@@ -64,6 +64,11 @@
   margin-left: auto;
 }
 
+.issue-checklists-move-form {
+  display: inline-flex;
+  margin: 0;
+}
+
 .issue-checklists-add-form {
   display: flex;
   flex-wrap: wrap;
@@ -80,6 +85,7 @@
 
 .issue-checklists-add-form input[type="submit"],
 .issue-checklists-delete,
+.issue-checklists-move,
 .issue-checklists-toggle-form input[type="submit"] {
   min-height: 44px;
 }

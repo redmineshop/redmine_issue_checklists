@@ -8,6 +8,10 @@ post 'issue_checklists/:id/toggle',
      to: 'issue_checklists#toggle',
      as: :toggle_issue_checklist
 
+post 'issue_checklists/:id/reorder',
+     to: 'issue_checklists#reorder',
+     as: :reorder_issue_checklist
+
 delete 'issue_checklists/:id',
        to: 'issue_checklists#destroy',
        as: :issue_checklist
