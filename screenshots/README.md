@@ -1,12 +1,7 @@
 # Screenshots — Redmine Issue Checklists
 
-Captured by Playwright against demo Redmine.
+- `issue-checklist.png` — issue page with the checklist under the description (four items, two done)
+- `checklist-edit.png` — the same issue with a new item typed and not yet saved
+- `issue-page-checklist.png` — the same image as `issue-checklist.png`
 
-Refresh is **private-monorepo only** (`redmineshop/redmineshop` harness). A public clone of this plugin cannot run that job.
-
-Output:
-
-- `issue-checklist.png` — full issue page: header plus checklist (four items, two done)
-- `issue-page-checklist.png` — same image (older README path)
-- `checklist-edit.png` — same issue with a new item typed and not yet saved
-- `tracker-settings.png` — not captured. Checklists are a role permission, not a per-tracker toggle.
+These files were not replaced when move up / move down was added. Those buttons are not in the pictures. There is no per-tracker checklist screen.
